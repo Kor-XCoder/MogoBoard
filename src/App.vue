@@ -25,7 +25,7 @@
         <div id="current-subject" class="subject" :class="{ done: statusState === 'done' }" style="font-size: 80px;">
           {{ currentSubjectText }}
         </div>
-        <div id="window-time" class="window" style="font-size: 40px;">{{ windowText }}</div>
+        <div id="window-time" class="window" style="font-size: 70px; color: white;">{{ windowText }}</div>
       </div>
     </main>
   </div>
