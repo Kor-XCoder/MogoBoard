@@ -231,6 +231,8 @@ aside h2 { margin: 8px 6px 12px; font-size: 22px; color: var(--muted); font-weig
   grid-auto-rows: minmax(64px, auto);
   min-height: 0;
   overflow: auto;
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer and Edge */ 
 }
 .schedule li {
   height: 40px;
