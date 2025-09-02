@@ -125,7 +125,13 @@ const currentSubjectText = computed(() => {
 
 const windowText = computed(() => {
   const st = status.value
-  if (st.state === 'in') return `${st.window.start} – ${st.window.end}`
+  if (st.state === 'in') {
+    let base = `${st.window.start} – ${st.window.end}`
+    if (st.window.subject === '점심') {
+      base += `\n13:00까지 입실 완료 (12:30 점심)`
+    }
+    return base
+  }
   if (st.state === 'pre' || st.state === 'gap') {
     const base = `${st.next.start} – ${st.next.end}`
     if (st.next && st.next.sit) return `${base}\n${st.next.sit}까지 입실 완료`
