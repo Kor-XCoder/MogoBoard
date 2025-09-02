@@ -2,6 +2,13 @@
   <div class="layout">
     <header>
       <div id="current-time" aria-live="polite">{{ currentTimeText }}</div>
+      <div class="tester">
+        <label>
+          <input type="checkbox" v-model="testMode" />
+          테스트 모드
+        </label>
+        <input type="time" v-model="testTime" step="60" />
+      </div>
     </header>
 
     <aside>
@@ -15,7 +22,7 @@
           :data-subject="w.subject"
         >
           <div class="subject">{{ w.subject }}</div>
-          <div class="time">{{ w.start }} – {{ w.end }}</div>
+          <div class="time" style="color: white;">{{ w.start }} – {{ w.end }}</div>
         </li>
       </ul>
     </aside>
@@ -34,13 +41,16 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
+const testMode = ref(false)
+const testTime = ref('')
+
 // === 설정: 오늘 진행할 모의고사 시간표 ===
 const SCHEDULE = [
-  { subject: '국어', start: '08:40', end: '10:00' },
-  { subject: '수학', start: '10:30', end: '12:10' },
-  { subject: '점심', start: '12:00', end: '13:00', break: true },
-  { subject: '영어', start: '13:10', end: '14:20' },
-  { subject: '한국사', start: '14:50', end: '15:20' },
+  { subject: '국어', start: '08:40', end: '10:00', break: true, sit: '08:15' },
+  { subject: '수학', start: '10:30', end: '12:10', break: true, sit: '10:20' },
+  { subject: '점심', start: '12:10', end: '13:00' },
+  { subject: '영어', start: '13:10', end: '14:20', break: true, sit: '13:00' },
+  { subject: '한국사', start: '14:50', end: '15:20', sit: '14:40'},
   { subject: '사회탐구', start: '15:35', end: '16:15' },
   { subject: '과학탐구', start: '16:30', end: '17:10' },
 ]
@@ -52,6 +62,17 @@ function todayAt(hhmm) {
   d.setHours(h, m, 0, 0)
   return d
 }
+
+function fmtHM(d) {
+  const h = String(d.getHours()).padStart(2, '0')
+  const m = String(d.getMinutes()).padStart(2, '0')
+  return `${h}:${m}`
+}
+
+const effectiveNow = computed(() => {
+  if (testMode.value && testTime.value) return todayAt(testTime.value)
+  return now.value
+})
 
 // 윈도우(각 과목의 시간창)
 const scheduleWindows = computed(() =>
@@ -70,7 +91,7 @@ const clockFmt = new Intl.DateTimeFormat('ko-KR', {
   minute: '2-digit',
   second: '2-digit',
 })
-const currentTimeText = computed(() => clockFmt.format(now.value))
+const currentTimeText = computed(() => clockFmt.format(effectiveNow.value))
 
 // 상태 계산
 function computeStatus(n) {
@@ -92,7 +113,7 @@ function computeStatus(n) {
   return { state: 'done' }
 }
 
-const status = computed(() => computeStatus(now.value))
+const status = computed(() => computeStatus(effectiveNow.value))
 const statusState = computed(() => status.value.state)
 
 const currentSubjectText = computed(() => {
@@ -105,7 +126,11 @@ const currentSubjectText = computed(() => {
 const windowText = computed(() => {
   const st = status.value
   if (st.state === 'in') return `${st.window.start} – ${st.window.end}`
-  if (st.state === 'pre' || st.state === 'gap') return `${st.next.start} – ${st.next.end}`
+  if (st.state === 'pre' || st.state === 'gap') {
+    let base = `${st.next.start} – ${st.next.end}`
+    if (st.next && st.next.sit) base += ` · ${st.next.sit}까지 입실 완료`
+    return base
+  }
   return '모든 과목 완료'
 })
 
@@ -116,6 +141,8 @@ function isActive(w) {
 
 let intervalId
 onMounted(() => {
+  // 테스트 모드 기본값: 현재 시각(HH:MM)
+  testTime.value = fmtHM(new Date())
   intervalId = setInterval(() => {
     now.value = new Date()
   }, 1000)
@@ -161,6 +188,10 @@ header {
 }
 #current-time { font-size: clamp(50px, 6vw, 100px); letter-spacing: 1.2px; font-variant-numeric: tabular-nums; font-weight: 500; }
 .now-label { font-size: 12px; color: var(--muted); letter-spacing: .24em; text-transform: uppercase; margin-bottom: 6px; }
+
+.tester { display: flex; gap: 10px; align-items: center; margin-top: 8px; font-size: 12px; color: var(--muted); }
+.tester input[type="time"] { background: #0f0f0f; color: var(--text); border: 1px solid #262626; padding: 4px 6px; border-radius: 6px; }
+.tester input[type="checkbox"] { accent-color: #a3a3a3; }
 
 aside {
   background: var(--panel);
