@@ -227,13 +227,13 @@ aside h2 { margin: 8px 6px 12px; font-size: 22px; color: var(--muted); font-weig
   margin: 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 8px;
+  gap: 4px;
   grid-auto-rows: minmax(64px, auto);
   min-height: 0;
   overflow: auto;
 }
 .schedule li {
-  height: 20px;
+  height: 40px;
 }
 .item {
   background: #0f0f0f;
