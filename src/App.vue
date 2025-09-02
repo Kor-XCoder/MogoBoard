@@ -234,6 +234,11 @@ aside h2 { margin: 8px 6px 12px; font-size: 22px; color: var(--muted); font-weig
   scrollbar-width: none;  /* Firefox */
   -ms-overflow-style: none;  /* Internet Explorer and Edge */ 
 }
+#schedule-list {
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer and Edge */
+  overflow: hidden;
+}
 .schedule li {
   height: 40px;
 }
