@@ -5,13 +5,13 @@
       <button class="fs-btn" type="button" @click="toggleFullscreen" aria-label="전체화면">
         ⛶
       </button>
-      <div class="tester">
+      <!-- <div class="tester">
         <label>
           <input type="checkbox" v-model="testMode" />
           테스트 모드
         </label>
         <input type="time" v-model="testTime" step="60" />
-      </div>
+      </div> -->
     </header>
 
     <aside>
@@ -131,7 +131,7 @@ const windowText = computed(() => {
   if (st.state === 'in') {
     let base = `${st.window.start} – ${st.window.end}`
     if (st.window.subject === '점심') {
-      base += `\n13:00까지 입실 완료 (12:30 점심)`
+      base += `\n13:00까지 입실 완료\n(12:30 점심)`
     }
     return base
   }
@@ -227,10 +227,13 @@ aside h2 { margin: 8px 6px 12px; font-size: 22px; color: var(--muted); font-weig
   margin: 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 8px;
   grid-auto-rows: minmax(64px, auto);
   min-height: 0;
   overflow: auto;
+}
+.schedule li {
+  height: 20px;
 }
 .item {
   background: #0f0f0f;
@@ -252,7 +255,7 @@ aside h2 { margin: 8px 6px 12px; font-size: 22px; color: var(--muted); font-weig
 main { display: grid; place-items: center; padding: 4vh 3vw; }
 .status { text-align: center; display: grid; gap: 16px; }
 .status .subject { font-size: clamp(64px, 8vw, 120px); font-weight: 800; }
-.status .window { color: var(--muted); font-size: 32px; white-space: pre-line; }
+.status .window { color: var(--muted); font-size: 80px; white-space: pre-line; color: white; }
 .status .done { color: var(--danger); }
 
 .small { font-size: 12px; color: var(--muted); }
