@@ -46,11 +46,11 @@ const testTime = ref('')
 
 // === 설정: 오늘 진행할 모의고사 시간표 ===
 const SCHEDULE = [
-  { subject: '국어', start: '08:40', end: '10:00', break: true, sit: '08:15' },
-  { subject: '수학', start: '10:30', end: '12:10', break: true, sit: '10:20' },
-  { subject: '점심', start: '12:10', end: '13:00' },
-  { subject: '영어', start: '13:10', end: '14:20', break: true, sit: '13:00' },
-  { subject: '한국사', start: '14:50', end: '15:20', sit: '14:40'},
+  { subject: '국어', start: '08:40', end: '10:00', sit: '08:15' },
+  { subject: '수학', start: '10:30', end: '12:10', sit: '10:20' },
+  { subject: '점심', start: '12:10', end: '13:00'},
+  { subject: '영어', start: '13:10', end: '14:20', sit: '13:00' },
+  { subject: '한국사', start: '14:50', end: '15:20', sit: '14:40' },
   { subject: '사회탐구', start: '15:35', end: '16:15' },
   { subject: '과학탐구', start: '16:30', end: '17:10' },
 ]
@@ -127,8 +127,8 @@ const windowText = computed(() => {
   const st = status.value
   if (st.state === 'in') return `${st.window.start} – ${st.window.end}`
   if (st.state === 'pre' || st.state === 'gap') {
-    let base = `${st.next.start} – ${st.next.end}`
-    if (st.next && st.next.sit) base += ` · ${st.next.sit}까지 입실 완료`
+    const base = `${st.next.start} – ${st.next.end}`
+    if (st.next && st.next.sit) return `${base}\n${st.next.sit}까지 입실 완료`
     return base
   }
   return '모든 과목 완료'
@@ -198,9 +198,9 @@ aside {
   border-right: 1px solid #262626;
   padding: 16px 14px;
   display: grid;
-  grid-template-rows: auto 1fr; /* title then scrollable list */
-  min-height: 0; /* allow child to shrink and scroll */
-  overflow: hidden; /* scrolling happens on the list */
+  grid-template-rows: auto 1fr;
+  min-height: 0; 
+  overflow: hidden;
 }
 aside h2 { margin: 8px 6px 12px; font-size: 16px; color: var(--muted); font-weight: 600; }
 .schedule {
@@ -212,7 +212,7 @@ aside h2 { margin: 8px 6px 12px; font-size: 16px; color: var(--muted); font-weig
   gap: 12px;
   grid-auto-rows: minmax(56px, auto);
   min-height: 0;
-  overflow: auto; /* scroll only inside the list if needed */
+  overflow: auto;
 }
 .item {
   background: #0f0f0f;
@@ -234,7 +234,7 @@ aside h2 { margin: 8px 6px 12px; font-size: 16px; color: var(--muted); font-weig
 main { display: grid; place-items: center; padding: 4vh 3vw; }
 .status { text-align: center; display: grid; gap: 16px; }
 .status .subject { font-size: clamp(36px, 5vw, 56px); font-weight: 800; }
-.status .window { color: var(--muted); font-size: 16px; }
+.status .window { color: var(--muted); font-size: 16px; white-space: pre-line; }
 .status .done { color: var(--danger); }
 
 .small { font-size: 12px; color: var(--muted); }
