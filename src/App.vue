@@ -2,6 +2,9 @@
   <div class="layout">
     <header>
       <div id="current-time" aria-live="polite">{{ currentTimeText }}</div>
+      <button class="fs-btn" type="button" @click="toggleFullscreen" aria-label="전체화면">
+        ⛶
+      </button>
       <div class="tester">
         <label>
           <input type="checkbox" v-model="testMode" />
@@ -22,17 +25,17 @@
           :data-subject="w.subject"
         >
           <div class="subject">{{ w.subject }}</div>
-          <div class="time" style="color: white;">{{ w.start }} – {{ w.end }}</div>
+          <div class="time">{{ w.start }} – {{ w.end }}</div>
         </li>
       </ul>
     </aside>
 
     <main>
       <div class="status">
-        <div id="current-subject" class="subject" :class="{ done: statusState === 'done' }" style="font-size: 80px;">
+        <div id="current-subject" class="subject" :class="{ done: statusState === 'done' }">
           {{ currentSubjectText }}
         </div>
-        <div id="window-time" class="window" style="font-size: 70px; color: white;">{{ windowText }}</div>
+        <div id="window-time" class="window">{{ windowText }}</div>
       </div>
     </main>
   </div>
@@ -145,6 +148,15 @@ function isActive(w) {
   return st.state === 'in' && st.window.subject === w.subject
 }
 
+function toggleFullscreen() {
+  const el = document.documentElement
+  if (!document.fullscreenElement) {
+    (el.requestFullscreen && el.requestFullscreen())
+  } else {
+    (document.exitFullscreen && document.exitFullscreen())
+  }
+}
+
 let intervalId
 onMounted(() => {
   // 테스트 모드 기본값: 현재 시각(HH:MM)
@@ -178,7 +190,7 @@ body {
 }
 .layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 360px 1fr;
   grid-template-rows: auto 1fr;
   height: 100dvh;
   min-height: 100dvh;
@@ -192,7 +204,7 @@ header {
   display: grid; place-items: center;
   text-align: center;
 }
-#current-time { font-size: clamp(50px, 6vw, 100px); letter-spacing: 1.2px; font-variant-numeric: tabular-nums; font-weight: 500; }
+#current-time { font-size: clamp(64px, 7vw, 120px); letter-spacing: 1.2px; font-variant-numeric: tabular-nums; font-weight: 500; }
 .now-label { font-size: 12px; color: var(--muted); letter-spacing: .24em; text-transform: uppercase; margin-bottom: 6px; }
 
 .tester { display: flex; gap: 10px; align-items: center; margin-top: 8px; font-size: 12px; color: var(--muted); }
@@ -208,15 +220,15 @@ aside {
   min-height: 0; 
   overflow: hidden;
 }
-aside h2 { margin: 8px 6px 12px; font-size: 16px; color: var(--muted); font-weight: 600; }
+aside h2 { margin: 8px 6px 12px; font-size: 22px; color: var(--muted); font-weight: 600; }
 .schedule {
   list-style: none;
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-  grid-auto-rows: minmax(56px, auto);
+  grid-template-columns: 1fr;
+  gap: 16px;
+  grid-auto-rows: minmax(64px, auto);
   min-height: 0;
   overflow: auto;
 }
@@ -224,23 +236,23 @@ aside h2 { margin: 8px 6px 12px; font-size: 16px; color: var(--muted); font-weig
   background: #0f0f0f;
   border: 1px solid #262626;
   border-radius: 10px;
-  padding: 14px 16px;
+  padding: 18px 20px;
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: auto;
   gap: 8px 12px;
   align-items: center;
 }
-.item .time { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 18px; font-weight: 700; text-align: right; white-space: nowrap; }
-.item .subject { font-weight: 700; letter-spacing: .3px; font-size: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item .time { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 22px; font-weight: 700; text-align: right; white-space: nowrap; }
+.item .subject { font-weight: 700; letter-spacing: .3px; font-size: 28px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .item.active { border-color: var(--accent); }
 .item.active .subject { color: var(--accent); }
 .item.break .subject { color: var(--accent-2); }
 
 main { display: grid; place-items: center; padding: 4vh 3vw; }
 .status { text-align: center; display: grid; gap: 16px; }
-.status .subject { font-size: clamp(36px, 5vw, 56px); font-weight: 800; }
-.status .window { color: var(--muted); font-size: 16px; white-space: pre-line; }
+.status .subject { font-size: clamp(64px, 8vw, 120px); font-weight: 800; }
+.status .window { color: var(--muted); font-size: 32px; white-space: pre-line; }
 .status .done { color: var(--danger); }
 
 .small { font-size: 12px; color: var(--muted); }
@@ -251,4 +263,8 @@ main { display: grid; place-items: center; padding: 4vh 3vw; }
   aside { grid-row: 2; border-right: none; border-top: 1px solid #262626; }
   main { grid-row: 3; }
 }
+
+header { position: relative; }
+.fs-btn { position: absolute; right: 16px; top: 12px; background: #0f0f0f; color: var(--text); border: 1px solid #262626; border-radius: 8px; padding: 6px 10px; font-size: 16px; cursor: pointer; }
+.fs-btn:hover { filter: brightness(1.1); }
 </style>
