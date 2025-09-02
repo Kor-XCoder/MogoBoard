@@ -268,6 +268,6 @@ main { display: grid; place-items: center; padding: 4vh 3vw; }
 }
 
 header { position: relative; }
-.fs-btn { position: absolute; right: 16px; top: 12px; background: #0f0f0f; color: var(--text); border: 1px solid #262626; border-radius: 8px; padding: 6px 10px; font-size: 16px; cursor: pointer; }
+.fs-btn { position: absolute; right: 16px; top: 12px; background: #108fcf; color: var(--text); border: 1px solid #262626; border-radius: 8px; padding: 8px 12px; font-size: 16px; cursor: pointer; }
 .fs-btn:hover { filter: brightness(1.1); }
 </style>
